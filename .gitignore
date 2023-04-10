@@ -5,6 +5,9 @@
 # Environment variables
 .env
 
+# Database
+/db
+
 # Logs
 logs
 *.log
