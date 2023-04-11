@@ -1,9 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
 @Entity()
+@Index(['name', 'region'], { unique: true })
 export class Summoner {
-  @PrimaryGeneratedColumn()
-  voidId: number;
+  @PrimaryColumn()
+  id: string;
 
   @Column()
   accountId: string;
@@ -11,14 +12,11 @@ export class Summoner {
   @Column()
   profileIconId: number;
 
-  @Column()
+  @Column({ type: 'float' })
   revisionDate: number;
 
   @Column()
   name: string;
-
-  @Column()
-  id: string;
 
   @Column()
   puuid: string;

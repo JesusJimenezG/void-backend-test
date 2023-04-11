@@ -7,4 +7,9 @@ export class CreateSummonerDto {
   puuid: string;
   summonerLevel: number;
   region: string;
+  // region: string;
+  // rank: string;
+  // leaguePoints: number;
+  // wins: number;
+  // losses: number;
 }

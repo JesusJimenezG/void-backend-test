@@ -8,8 +8,6 @@ ConfigModule.forRoot({
 
 const configService = new ConfigService();
 
-console.log('config: ', configService.get('DB_HOST'));
-
 export const dataSourceConfig: DataSourceOptions = {
   type: configService.get('DB_TYPE') as any,
   host: configService.get<string>('DB_HOST'),
@@ -20,7 +18,6 @@ export const dataSourceConfig: DataSourceOptions = {
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
   synchronize: false,
-  // migrationsRun: true,
   logging: true,
   namingStrategy: new SnakeNamingStrategy(),
 };
