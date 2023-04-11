@@ -3,26 +3,33 @@ version: '3'
 services:
   void-backend-test:
     image: node:18.15.0-alpine3.17
-    container_name: void-backend-test
     working_dir: /usr/src/app
+    container_name: void-backend
     ports:
       - 4000:4000
     volumes:
       - .:/usr/src/app
     command: npm run start:dev
     env_file:
-      - .env
+      - .development.env
+    environment:
+      - NODE_ENV=development
     depends_on:
-      - void-backend-db
+      - void-postgres
+    networks:
+      - void-network
 
-  void-backend-db:
+  void-postgres:
     image: postgres:15.2-alpine3.17
-    container_name: void-backend-db
+    container_name: void-postgres
     ports:
       - 5432:5432
-    # volumes:
-    #   - ./db:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: void
       POSTGRES_PASSWORD: void
       POSTGRES_DB: void
+    networks:
+      - void-network
+
+networks:
+  void-network:

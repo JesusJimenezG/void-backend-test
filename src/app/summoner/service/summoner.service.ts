@@ -1,9 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { CreateSummonerDto } from './dto/create-summoner.dto';
-import { UpdateSummonerDto } from './dto/update-summoner.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { CreateSummonerDto } from '../dto/create-summoner.dto';
+import { UpdateSummonerDto } from '../dto/update-summoner.dto';
+import { Repository } from 'typeorm';
+import { Summoner } from '../entities/summoner.entity';
 
 @Injectable()
 export class SummonerService {
+  constructor(
+    @Inject('SUMMONER_REPOSITORY')
+    private summonerRepository: Repository<Summoner>,
+  ) {}
+
   create(createSummonerDto: CreateSummonerDto) {
     return 'This action adds a new summoner';
   }

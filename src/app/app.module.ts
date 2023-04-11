@@ -1,12 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { SummonerController } from './summoner/summoner.controller';
-import { SummonerService } from './summoner/summoner.service';
+import { SummonerModule } from './summoner/summoner.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { dataSourceConfig } from 'src/config/data.source';
+import { ConfigModule } from '@nestjs/config';
+import configuration from 'src/config/configuration';
 
 @Module({
-  imports: [],
-  controllers: [AppController, SummonerController],
-  providers: [AppService, SummonerService],
+  imports: [
+    SummonerModule,
+    TypeOrmModule.forRoot({ ...dataSourceConfig }),
+    ConfigModule.forRoot({
+      load: [configuration],
+      isGlobal: true,
+    }),
+  ],
 })
 export class AppModule {}

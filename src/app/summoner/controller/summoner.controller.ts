@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SummonerService } from './summoner.service';
-import { CreateSummonerDto } from './dto/create-summoner.dto';
-import { UpdateSummonerDto } from './dto/update-summoner.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { SummonerService } from '../service/summoner.service';
+import { CreateSummonerDto } from '../dto/create-summoner.dto';
+import { UpdateSummonerDto } from '../dto/update-summoner.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('summoner')
 @Controller('summoner')
 export class SummonerController {
   constructor(private readonly summonerService: SummonerService) {}
@@ -23,7 +33,10 @@ export class SummonerController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSummonerDto: UpdateSummonerDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateSummonerDto: UpdateSummonerDto,
+  ) {
     return this.summonerService.update(+id, updateSummonerDto);
   }
 

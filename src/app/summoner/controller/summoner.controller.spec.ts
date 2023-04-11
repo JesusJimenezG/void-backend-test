@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SummonerController } from './summoner.controller';
-import { SummonerService } from './summoner.service';
+import { SummonerService } from '../service/summoner.service';
 
 describe('SummonerController', () => {
   let controller: SummonerController;
