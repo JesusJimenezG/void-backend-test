@@ -1,25 +1,24 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateLeagueDto } from '../dto/create-league.dto';
-import { UpdateLeagueDto } from '../dto/update-league.dto';
-import { REPOSITORIES } from 'src/config/constants';
 import { League } from '../entities/league.entity';
-import { Repository, getRepository } from 'typeorm';
-import { RiotAPIService } from 'src/app/riot-api/riot.api.service';
-import { getCustomRepositoryToken } from '@nestjs/typeorm';
-import dataSource from 'src/config/data.source';
-import { Summoner } from 'src/app/summoner/entities/summoner.entity';
+import { Repository } from 'typeorm';
+import { RiotAPIService } from '../../riot-api/riot.api.service';
+import { Summoner } from '../../summoner/entities/summoner.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateLeagueDto } from '../dto/update-league.dto';
 
 @Injectable()
 export class LeagueService {
   constructor(
-    @Inject(REPOSITORIES.LEAGUE)
+    @InjectRepository(League)
     private leagueRepository: Repository<League>,
+    @InjectRepository(Summoner)
+    private summonerRepository: Repository<Summoner>,
     private readonly riotService: RiotAPIService,
   ) {}
 
   async create(createLeagueDto: CreateLeagueDto) {
-    const summonerRepository = dataSource.getRepository(Summoner);
-    const summoner = await summonerRepository.findOne({
+    const summoner = await this.summonerRepository.findOne({
       select: ['id'],
       where: { id: createLeagueDto.summonerId },
     });
@@ -29,30 +28,15 @@ export class LeagueService {
         `Summoner with id ${createLeagueDto.summonerId} not found`,
       );
     }
-    const league = new League();
-    league.leagueId = createLeagueDto.leagueId;
-    league.summoner = summoner;
-    league.queueType = createLeagueDto.queueType;
-    league.tier = createLeagueDto.tier;
-    league.rank = createLeagueDto.rank;
-    league.leaguePoints = createLeagueDto.leaguePoints;
-    league.wins = createLeagueDto.wins;
-    league.losses = createLeagueDto.losses;
-    league.hotStreak = createLeagueDto.hotStreak;
-    league.veteran = createLeagueDto.veteran;
-    league.freshBlood = createLeagueDto.freshBlood;
-    league.inactive = createLeagueDto.inactive;
-    league.region = createLeagueDto.region;
 
-    return this.leagueRepository.insert(league);
+    const league = this.leagueRepository.create(createLeagueDto);
+    league.summoner = summoner;
+    this.leagueRepository.insert(league);
+    return league;
   }
 
-  // findAll() {
-  //   return `This action returns all league`;
-  // }
-
-  async findOne(region: string, summonerId: string) {
-    const league = await this.leagueRepository
+  async findAll(region: string, summonerId: string) {
+    let leagues = await this.leagueRepository
       .createQueryBuilder('league')
       .select(['league'])
       .innerJoin('league.summoner', 'summoner')
@@ -60,27 +44,28 @@ export class LeagueService {
       .andWhere('summoner.id = :summonerId', { summonerId })
       .getMany();
 
-    console.log('query: ', league);
-
-    if (!league) {
+    if (leagues.length <= 0) {
       // Fetch league from Riot API
-      const url = `https://${region}.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`;
-      const data = await this.riotService.fetchFromRiotAPI(url);
+      const data = await this.riotService.fetchLeagueBySummonerId(
+        region,
+        summonerId,
+      );
       // Save league to database
+      leagues = [];
       data.forEach((league) => {
         let newLeague = new CreateLeagueDto();
         newLeague = { ...newLeague, ...league, region };
-        this.create(newLeague);
+        leagues.push();
       });
     }
-    return league;
+    return leagues;
   }
 
-  // update(id: number, updateLeagueDto: UpdateLeagueDto) {
-  //   return `This action updates a #${id} league`;
-  // }
+  update(leagueId: string, updateLeagueDto: UpdateLeagueDto) {
+    return this.leagueRepository.update(leagueId, updateLeagueDto);
+  }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} league`;
-  // }
+  remove(leagueId: string) {
+    return this.leagueRepository.softDelete(leagueId);
+  }
 }

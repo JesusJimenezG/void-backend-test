@@ -1,12 +1,12 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
 @Entity()
-@Index(['name', 'region'], { unique: true })
+@Index(['name', 'region', 'id'], { unique: true })
 export class Summoner {
-  @PrimaryColumn()
+  @PrimaryColumn({ unique: true })
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   accountId: string;
 
   @Column()
@@ -18,7 +18,7 @@ export class Summoner {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   puuid: string;
 
   @Column()

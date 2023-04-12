@@ -10,10 +10,10 @@ services:
     volumes:
       - .:/usr/src/app
     command: npm run start:dev
-    env_file:
-      - .development.env
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=dev
+    env_file:
+      - .env.dev
     depends_on:
       - void-postgres
     networks:

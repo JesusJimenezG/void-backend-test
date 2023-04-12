@@ -7,8 +7,11 @@ import { ApiTags } from '@nestjs/swagger';
 export class SummaryController {
   constructor(private readonly summaryService: SummaryService) {}
 
-  @Get(':summonerId')
-  getSummary(@Param('summonerId') summonerId: string) {
-    return this.summaryService.getSummary(summonerId);
+  @Get(':region/:summonerName')
+  getSummary(
+    @Param('region') region: string,
+    @Param('summonerName') summonerName: string,
+  ) {
+    return this.summaryService.getSummary(region, summonerName);
   }
 }

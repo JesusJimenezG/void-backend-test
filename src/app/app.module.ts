@@ -1,19 +1,21 @@
 import { Module } from '@nestjs/common';
 import { SummonerModule } from './summoner/summoner.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { dataSourceConfig } from 'src/config/data.source';
 import { ConfigModule } from '@nestjs/config';
-import configuration from 'src/config/configuration';
 import { LeagueModule } from './league/league.module';
 import { SummaryModule } from './summary/summary.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({ ...dataSourceConfig }),
     ConfigModule.forRoot({
-      load: [configuration],
+      envFilePath: `.env.${process.env.NODE_ENV}`,
       isGlobal: true,
     }),
+    // TypeOrmModule.forRootAsync({
+    //   useFactory: async (configService) => {
+    //     return await getTypeOrmConfig(configService);
+    //   },
+    //   inject: [ConfigService],
+    // }),
     SummonerModule,
     LeagueModule,
     SummaryModule,

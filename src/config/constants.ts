@@ -1,3 +1,7 @@
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { League } from '../app/league/entities/league.entity';
+import { Summoner } from '../app/summoner/entities/summoner.entity';
+
 export const SWAGGER = {
   path: 'docs',
   title: 'Riot API endpoints integration example',
@@ -8,9 +12,8 @@ export const SWAGGER = {
 
 export const REPOSITORIES = {
   SOURCE: 'DATA_SOURCE',
-  SUMMONER: 'SUMMONER_REPOSITORY',
-  SUMMARY: 'SUMMARY_REPOSITORY',
-  LEAGUE: 'LEAGUE_REPOSITORY',
+  SUMMONER: getRepositoryToken(Summoner),
+  LEAGUE: getRepositoryToken(League),
 };
 
 export const GLOBAL_PREFIX = 'api';

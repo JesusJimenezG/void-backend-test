@@ -1,12 +1,13 @@
-import { REPOSITORIES } from 'src/config/constants';
-import DataSource from 'src/config/data.source';
+import { REPOSITORIES } from '../config/constants';
+import DataSource from './data.source';
 
 export const databaseProviders = [
   {
     provide: REPOSITORIES.SOURCE,
     useFactory: async () => {
-      const dataSource = DataSource;
-      return dataSource.initialize();
+      // const config = await getTypeOrmConfig(configService);
+      // const dataSource = DataSource;
+      return DataSource.initialize();
     },
   },
 ];

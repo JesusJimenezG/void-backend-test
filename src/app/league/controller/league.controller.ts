@@ -3,14 +3,14 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
+  Patch,
   Delete,
 } from '@nestjs/common';
 import { LeagueService } from '../service/league.service';
 import { CreateLeagueDto } from '../dto/create-league.dto';
-import { UpdateLeagueDto } from '../dto/update-league.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { UpdateLeagueDto } from '../dto/update-league.dto';
 
 @ApiTags('League')
 @Controller('league')
@@ -22,26 +22,24 @@ export class LeagueController {
     return this.leagueService.create(createLeagueDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.leagueService.findAll();
-  // }
-
   @Get(':region/:summonerId')
-  findOne(
+  findAll(
     @Param('region') region: string,
     @Param('summonerId') summonerId: string,
   ) {
-    return this.leagueService.findOne(region, summonerId);
+    return this.leagueService.findAll(region, summonerId);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateLeagueDto: UpdateLeagueDto) {
-  //   return this.leagueService.update(+id, updateLeagueDto);
-  // }
+  @Patch(':leagueId')
+  update(
+    @Param('leagueId') leagueId: string,
+    @Body() updateLeagueDto: UpdateLeagueDto,
+  ) {
+    return this.leagueService.update(leagueId, updateLeagueDto);
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.leagueService.remove(+id);
-  // }
+  @Delete(':leagueId')
+  remove(@Param('leagueId') leagueId: string) {
+    return this.leagueService.remove(leagueId);
+  }
 }

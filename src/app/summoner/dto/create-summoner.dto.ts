@@ -1,15 +1,10 @@
 export class CreateSummonerDto {
+  id: string;
   accountId: string;
+  puuid: string;
+  name: string;
   profileIconId: number;
   revisionDate: number;
-  name: string;
-  id: string;
-  puuid: string;
   summonerLevel: number;
   region: string;
-  // region: string;
-  // rank: string;
-  // leaguePoints: number;
-  // wins: number;
-  // losses: number;
 }

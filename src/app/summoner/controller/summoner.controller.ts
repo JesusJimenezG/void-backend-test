@@ -9,42 +9,49 @@ import {
 } from '@nestjs/common';
 import { SummonerService } from '../service/summoner.service';
 import { CreateSummonerDto } from '../dto/create-summoner.dto';
-// import { UpdateSummonerDto } from '../dto/update-summoner.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { UpdateSummonerDto } from '../dto/update-summoner.dto';
 
 @ApiTags('Summoner')
 @Controller('summoner')
 export class SummonerController {
   constructor(private readonly summonerService: SummonerService) {}
 
-  @Post()
-  create(@Body() createSummonerDto: CreateSummonerDto) {
-    return this.summonerService.create(createSummonerDto);
+  @Post(':region')
+  create(
+    @Param('region') region: string,
+    @Body() createSummonerDto: CreateSummonerDto,
+  ) {
+    return this.summonerService.create(region, createSummonerDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.summonerService.findAll();
-  // }
+  @Get(':region/summoners')
+  findAll(@Param('region') region: string) {
+    return this.summonerService.findAll(region);
+  }
 
-  @Get(':region/:summoner')
+  @Get(':region/:summonerName')
   findOne(
     @Param('region') region: string,
-    @Param('summoner') summonerName: string,
+    @Param('summonerName') summonerName: string,
   ) {
-    return this.summonerService.findOne(summonerName, region);
+    return this.summonerService.findOne(region, summonerName);
   }
 
-  // @Patch(':uuid')
-  // update(
-  //   @Param('uuid') uuid: string,
-  //   @Body() updateSummonerDto: UpdateSummonerDto,
-  // ) {
-  //   return this.summonerService.update(uuid, updateSummonerDto);
-  // }
+  @Patch(':region/:summonerId')
+  update(
+    @Param('region') region: string,
+    @Param('summonerId') summonerId: string,
+    @Body() updateSummonerDto: UpdateSummonerDto,
+  ) {
+    return this.summonerService.update(region, summonerId, updateSummonerDto);
+  }
 
-  // @Delete(':uuid')
-  // remove(@Param('uuid') uuid: string) {
-  //   return this.summonerService.remove(uuid);
-  // }
+  @Delete(':region/:summonerId')
+  remove(
+    @Param('region') region: string,
+    @Param('summonerId') summonerId: string,
+  ) {
+    return this.summonerService.remove(region, summonerId);
+  }
 }

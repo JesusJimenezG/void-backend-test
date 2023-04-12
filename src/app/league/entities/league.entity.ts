@@ -3,7 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class League {
-  @PrimaryColumn()
+  @PrimaryColumn({ unique: true })
   leagueId: string;
 
   @ManyToOne(() => Summoner)
