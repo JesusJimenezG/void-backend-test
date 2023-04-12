@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { SummaryService } from '../service/summary.service';
+import { SummaryService } from '../services/summary.service';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Player Summary')

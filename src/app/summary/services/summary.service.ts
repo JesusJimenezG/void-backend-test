@@ -1,5 +1,5 @@
-import { SummonerService } from '../../summoner/service/summoner.service';
-import { LeagueService } from '../../league/service/league.service';
+import { SummonerService } from '../../summoner/services/summoner.service';
+import { LeagueService } from '../../league/services/league.service';
 import { PlayerSummaryDto } from '../dto/player_summary.dto';
 import { Injectable } from '@nestjs/common';
 
@@ -11,8 +11,14 @@ export class SummaryService {
   ) {}
 
   async getSummary(region: string, summonerName: string) {
-    const summoner = await this.summonerService.findOne(region, summonerName);
-    const leagues = await this.leagueService.findAll(region, summoner.id);
+    const summoner = await this.summonerService.findBySummonerName(
+      region,
+      summonerName,
+    );
+    const leagues = await this.leagueService.findBySummonerName(
+      region,
+      summoner.name,
+    );
 
     const playerSummary = new PlayerSummaryDto();
     playerSummary.name = summoner.name;

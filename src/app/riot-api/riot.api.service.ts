@@ -11,9 +11,9 @@ export class RiotAPIService {
     private readonly httpService: HttpService,
   ) {}
 
-  async fetchSummonerByName(region: string, name: string) {
-    const summonerName = name.replace(' ', '');
-    const url = `https://${region}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`;
+  async fetchSummonerByName(region: string, summonerName: string) {
+    const urlName = summonerName.replace(' ', '');
+    const url = `https://${region}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${urlName}`;
     const data = await this.fetchFromRiotAPI(url);
     return data;
   }

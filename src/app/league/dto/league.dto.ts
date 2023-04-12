@@ -1,7 +1,9 @@
+import { PartialType } from '@nestjs/swagger';
+
 export class CreateLeagueDto {
   leagueId: string;
   summonerId: string;
-  // summonerName: string;
+  summonerName: string;
   queueType: string;
   tier: string;
   rank: string;
@@ -14,3 +16,5 @@ export class CreateLeagueDto {
   inactive: boolean;
   region: string;
 }
+
+export class UpdateLeagueDto extends PartialType(CreateLeagueDto) {}

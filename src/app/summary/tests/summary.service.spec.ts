@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SummaryService } from '../service/summary.service';
+import { SummaryService } from '../services/summary.service';
 import { LeagueModule } from '../../league/league.module';
 import { SummonerModule } from '../../summoner/summoner.module';
 import { ConfigModule } from '@nestjs/config';

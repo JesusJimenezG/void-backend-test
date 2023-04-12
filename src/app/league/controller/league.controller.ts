@@ -7,39 +7,60 @@ import {
   Patch,
   Delete,
 } from '@nestjs/common';
-import { LeagueService } from '../service/league.service';
-import { CreateLeagueDto } from '../dto/create-league.dto';
+import { LeagueService } from '../services/league.service';
 import { ApiTags } from '@nestjs/swagger';
-import { UpdateLeagueDto } from '../dto/update-league.dto';
+import { CreateLeagueDto, UpdateLeagueDto } from '../dto/league.dto';
 
 @ApiTags('League')
 @Controller('league')
 export class LeagueController {
   constructor(private readonly leagueService: LeagueService) {}
 
-  @Post()
-  create(@Body() createLeagueDto: CreateLeagueDto) {
-    return this.leagueService.create(createLeagueDto);
-  }
-
-  @Get(':region/:summonerId')
-  findAll(
+  @Post(':region')
+  create(
     @Param('region') region: string,
-    @Param('summonerId') summonerId: string,
+    @Body() createLeagueDto: CreateLeagueDto,
   ) {
-    return this.leagueService.findAll(region, summonerId);
+    return this.leagueService.create(region, createLeagueDto);
   }
 
-  @Patch(':leagueId')
+  @Get(':region/leagues')
+  findAll(@Param('region') region: string) {
+    return this.leagueService.findAll(region);
+  }
+
+  @Get(':region/:summonerName')
+  findBySummonerName(
+    @Param('region') region: string,
+    @Param('summonerName') summonerName: string,
+  ) {
+    return this.leagueService.findBySummonerName(region, summonerName);
+  }
+
+  @Get(':region/:summonerName/:queueType')
+  findBySummonerAndQueue(
+    @Param('region') region: string,
+    @Param('summonerName') summonerName: string,
+    @Param('queueType') queueType: string,
+  ) {
+    return this.leagueService.findBySummonerAndQueue(
+      region,
+      summonerName,
+      queueType,
+    );
+  }
+
+  @Patch(':region/:leagueId')
   update(
+    @Param('region') region: string,
     @Param('leagueId') leagueId: string,
     @Body() updateLeagueDto: UpdateLeagueDto,
   ) {
-    return this.leagueService.update(leagueId, updateLeagueDto);
+    return this.leagueService.update(region, leagueId, updateLeagueDto);
   }
 
-  @Delete(':leagueId')
-  remove(@Param('leagueId') leagueId: string) {
-    return this.leagueService.remove(leagueId);
+  @Delete(':region/:leagueId')
+  remove(@Param('region') region: string, @Param('leagueId') leagueId: string) {
+    return this.leagueService.remove(region, leagueId);
   }
 }
