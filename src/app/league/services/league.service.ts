@@ -5,7 +5,7 @@ import { RiotAPIService } from '../../riot-api/riot.api.service';
 import { Summoner } from '../../summoner/entities/summoner.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateLeagueDto, UpdateLeagueDto } from '../dto/league.dto';
-import { mapLeagueToDto } from './service.utils';
+import { mapLeagueToDto } from './league.service.utils';
 
 @Injectable()
 export class LeagueService {
@@ -13,7 +13,7 @@ export class LeagueService {
     @InjectRepository(League)
     private leagueRepository: Repository<League>,
     @InjectRepository(Summoner)
-    private summonerRepository: Repository<Summoner>,
+    private readonly summonerRepository: Repository<Summoner>,
     private readonly riotService: RiotAPIService,
   ) {}
 
@@ -65,7 +65,7 @@ export class LeagueService {
     return (
       await this.leagueRepository
         .createQueryBuilder('league')
-        .leftJoinAndSelect('league.summoner', 'summoner')
+        .innerJoin('league.summoner', 'summoner')
         .where('league.region = :region', { region })
         .getMany()
     ).map(mapLeagueToDto);

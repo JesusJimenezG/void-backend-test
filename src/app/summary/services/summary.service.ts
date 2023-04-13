@@ -1,7 +1,7 @@
 import { SummonerService } from '../../summoner/services/summoner.service';
 import { LeagueService } from '../../league/services/league.service';
-import { PlayerSummaryDto } from '../dto/player_summary.dto';
 import { Injectable } from '@nestjs/common';
+import { mapSummaryToPlayerSummaryDto } from './service.utils';
 
 @Injectable()
 export class SummaryService {
@@ -20,22 +20,7 @@ export class SummaryService {
       summoner.name,
     );
 
-    const playerSummary = new PlayerSummaryDto();
-    playerSummary.name = summoner.name;
-    playerSummary.image = summoner.profileIconId;
-    playerSummary.league = [
-      ...leagues.map((league) => {
-        return {
-          queueType: league.queueType,
-          tier: league.tier,
-          rank: league.rank,
-          leaguePoints: league.leaguePoints,
-          wins: league.wins,
-          losses: league.losses,
-        };
-      }),
-    ];
-
+    const playerSummary = mapSummaryToPlayerSummaryDto(summoner, leagues);
     return playerSummary;
   }
 }

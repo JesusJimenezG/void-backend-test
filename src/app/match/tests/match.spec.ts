@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MatchController } from './match.controller';
-import { MatchService } from './match.service';
+import { MatchController } from '../controller/match.controller';
+import { MatchService } from '../services/match.service';
 
 describe('MatchController', () => {
   let controller: MatchController;

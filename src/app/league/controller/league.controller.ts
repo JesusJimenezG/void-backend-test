@@ -6,13 +6,17 @@ import {
   Param,
   Patch,
   Delete,
+  UseInterceptors,
 } from '@nestjs/common';
 import { LeagueService } from '../services/league.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateLeagueDto, UpdateLeagueDto } from '../dto/league.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
+import { RegionInterceptor } from '../../utils/region.interceptor';
 
 @ApiTags('League')
 @Controller('league')
+@UseInterceptors(CacheInterceptor, RegionInterceptor)
 export class LeagueController {
   constructor(private readonly leagueService: LeagueService) {}
 

@@ -1,4 +1,5 @@
-import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
+import { Participant } from '../../match/entities/match.entity';
+import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity()
 @Index(['name', 'region', 'id'], { unique: true })
@@ -26,4 +27,7 @@ export class Summoner {
 
   @Column()
   region: string;
+
+  @OneToMany(() => Participant, (participant) => participant.summoner)
+  participants: Participant[];
 }

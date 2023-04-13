@@ -2,7 +2,6 @@ import { CreateLeagueDto } from '../dto/league.dto';
 import { League } from '../entities/league.entity';
 
 export function mapLeagueToDto(league: League): CreateLeagueDto {
-  console.log(league);
   const dto = new CreateLeagueDto();
   dto.leagueId = league.leagueId;
   dto.summonerId = league.summoner.id;

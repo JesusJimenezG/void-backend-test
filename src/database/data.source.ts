@@ -1,6 +1,5 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 ConfigModule.forRoot({
   envFilePath: `.env.${process.env.NODE_ENV}`,
@@ -20,7 +19,7 @@ export const dataSourceConfig: DataSourceOptions = {
   migrations: [__dirname + configService.get<string>('TYPEORM_MIGRATIONS')],
   synchronize: configService.get<string>('TYPEORM_SYNCHRONIZE') === 'true',
   logging: configService.get<string>('TYPEORM_LOGGING') === 'true',
-  namingStrategy: new SnakeNamingStrategy(),
+  // namingStrategy: new SnakeNamingStrategy(),
 };
 
 export default new DataSource(dataSourceConfig);

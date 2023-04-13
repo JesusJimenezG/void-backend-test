@@ -3,6 +3,11 @@ import { SummonerModule } from './summoner/summoner.module';
 import { ConfigModule } from '@nestjs/config';
 import { LeagueModule } from './league/league.module';
 import { SummaryModule } from './summary/summary.module';
+import { MatchModule } from './match/match.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { RedisClientOptions } from 'redis';
+import * as redisStore from 'cache-manager-redis-store';
+import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
   imports: [
@@ -10,15 +15,16 @@ import { SummaryModule } from './summary/summary.module';
       envFilePath: `.env.${process.env.NODE_ENV}`,
       isGlobal: true,
     }),
-    // TypeOrmModule.forRootAsync({
-    //   useFactory: async (configService) => {
-    //     return await getTypeOrmConfig(configService);
-    //   },
-    //   inject: [ConfigService],
-    // }),
+    CacheModule.register<RedisClientOptions>({
+      isGlobal: true,
+      store: redisStore,
+      url: process.env.REDIS_URL,
+      ttl: 60 * 60 * 24,
+    }),
     SummonerModule,
     LeagueModule,
     SummaryModule,
+    MatchModule,
   ],
 })
 export class AppModule {}
