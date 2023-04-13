@@ -1,4 +1,4 @@
-import { PlayerSummary } from 'src/modules/summary/entities/player_summary.entity';
+import { PlayerSummary } from '../../../modules/summary/entities/player_summary.entity';
 import { Summoner } from '../../summoner/entities/summoner.entity';
 import {
   Column,

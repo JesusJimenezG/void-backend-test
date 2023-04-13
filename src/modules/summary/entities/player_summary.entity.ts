@@ -1,5 +1,5 @@
-import { League } from 'src/modules/league/entities/league.entity';
-import { Summoner } from 'src/modules/summoner/entities/summoner.entity';
+import { League } from '../../../modules/league/entities/league.entity';
+import { Summoner } from '../../../modules/summoner/entities/summoner.entity';
 import {
   Column,
   Entity,

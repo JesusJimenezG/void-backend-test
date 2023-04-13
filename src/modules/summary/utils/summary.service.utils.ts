@@ -1,4 +1,3 @@
-import { MatchInfo } from 'src/modules/match/entities/match.entity';
 import { CreateLeagueDto } from '../../league/dto/league.dto';
 import { Summoner } from '../../summoner/entities/summoner.entity';
 import { MatchSummaryDTO } from '../dto/match_summary.dto';

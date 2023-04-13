@@ -28,7 +28,6 @@ export class LeagueService {
     const player = await this.dataSource.manager.findOne(PlayerSummary, {
       where: { summoner: summoner },
     });
-    console.log(`player: `, player);
 
     try {
       const league = this.leagueRepository.create(createLeagueDto);
@@ -53,7 +52,6 @@ export class LeagueService {
     const player = await this.dataSource.manager.findOne(PlayerSummary, {
       where: { summoner: summoner },
     });
-    console.log(`player: `, player);
 
     const newLeagues: League[] = [];
     for (const leagueDto of leaguesDTO) {
@@ -98,7 +96,6 @@ export class LeagueService {
 
     if (validLeague) {
       const queueType = QUEUE_TYPES[+queueId];
-      console.log('queueType: ', queueType);
       query.andWhere('league.queueType = :queueType', { queueType: queueType });
     }
 

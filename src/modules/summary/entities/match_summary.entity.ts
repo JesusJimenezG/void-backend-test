@@ -1,7 +1,7 @@
 import {
   MatchInfo,
   Participant,
-} from 'src/modules/match/entities/match.entity';
+} from '../../../modules/match/entities/match.entity';
 import {
   Column,
   Entity,

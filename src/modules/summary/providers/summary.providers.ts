@@ -1,4 +1,4 @@
-import { REPOSITORIES } from 'src/shared/constants/constants';
+import { REPOSITORIES } from '../../../shared/constants/constants';
 import { PlayerSummary } from '../entities/player_summary.entity';
 import { MatchSummary } from '../entities/match_summary.entity';
 

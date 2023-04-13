@@ -20,8 +20,8 @@ import {
   ChallengeDTO,
 } from '../dto/match.dto';
 import { mapParticipantsToDto } from '../utils/match.service.utils';
-import { PageMetaDto } from 'src/shared/pagination/page-meta.dto';
-import { PageDto } from 'src/shared/pagination/page.dto';
+import { PageMetaDto } from '../../../shared/pagination/page-meta.dto';
+import { PageDto } from '../../../shared/pagination/page.dto';
 
 @Injectable()
 export class MatchService {

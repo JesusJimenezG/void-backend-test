@@ -43,9 +43,6 @@ export class RiotAPIService {
     startTime?: number,
     endTime?: number,
   ): Promise<string[]> {
-    console.log('start: ', start);
-    console.log('count: ', count);
-    console.log('queue: ', queue);
     const server = getServer(region);
     const url = `https://${server}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?${
       queue ? `queue=${queue}&` : ''
@@ -60,7 +57,6 @@ export class RiotAPIService {
     matchId: string,
   ): Promise<MatchDto> {
     const server = getServer(region);
-    console.log('server: ', server);
     const url = `https://${server}.api.riotgames.com/lol/match/v5/matches/${matchId}`;
     const data = await this.fetchFromRiotAPI(url);
     return data;

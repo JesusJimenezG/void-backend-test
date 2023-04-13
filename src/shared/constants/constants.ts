@@ -8,8 +8,8 @@ import {
   MatchMetadata,
   Participant,
 } from '../../modules/match/entities/match.entity';
-import { PlayerSummary } from 'src/modules/summary/entities/player_summary.entity';
-import { MatchSummary } from 'src/modules/summary/entities/match_summary.entity';
+import { PlayerSummary } from '../../modules/summary/entities/player_summary.entity';
+import { MatchSummary } from '../../modules/summary/entities/match_summary.entity';
 
 export const SWAGGER = {
   path: 'docs',

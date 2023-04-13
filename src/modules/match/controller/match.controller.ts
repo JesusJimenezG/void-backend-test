@@ -3,7 +3,7 @@ import { MatchService } from '../services/match.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { RegionInterceptor } from '../../../shared/interceptors/region.interceptor';
-import { PageOptionsDto } from 'src/shared/pagination/page-options.dto';
+import { PageOptionsDto } from '../../../shared/pagination/page-options.dto';
 
 @ApiTags('Player Matches')
 @Controller('match')

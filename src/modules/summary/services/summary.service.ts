@@ -8,9 +8,11 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlayerSummary } from '../entities/player_summary.entity';
 import { Repository } from 'typeorm';
-import { MatchService } from 'src/modules/match/services/match.service';
+import { MatchService } from '../../../modules/match/services/match.service';
 import { MatchSummary } from '../entities/match_summary.entity';
-import { PageOptionsDto } from 'src/shared/pagination/page-options.dto';
+import { PageOptionsDto } from '../../../shared/pagination/page-options.dto';
+import { PageDto } from '../../../shared/pagination/page.dto';
+import { PageMetaDto } from '../../../shared/pagination/page-meta.dto';
 
 @Injectable()
 export class SummaryService {
@@ -50,17 +52,19 @@ export class SummaryService {
         const newMatchSummary = new MatchSummary();
         newMatchSummary.matchInfo = match.info;
         newMatchSummary.participant = match.info.participants[0];
-        console.log(`participant: `, newMatchSummary.participant);
         newMatchSummary.region = region;
         matchSummary = await this.matchSummaryRepository.save(newMatchSummary);
       }
-      console.log(`matchSummary: `, matchSummary);
       recentMatchesSummary.push(matchSummary);
     }
 
     const matchSummary = mapToMatchSummaryDto(recentMatchesSummary);
-    console.log('matchSummary: ', matchSummary);
-    return matchSummary;
+    const pageMetaDto = new PageMetaDto({
+      itemCount: matchSummary.length,
+      pageOptionsDto,
+    });
+    return new PageDto(matchSummary, pageMetaDto);
+    // return matchSummary;
   }
 
   async getPlayerSummary(
