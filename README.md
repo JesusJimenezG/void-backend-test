@@ -8,10 +8,14 @@ This is a simple test for developing a medium sized set of endpoints integrating
 
 - Docker
 - Docker Compose
-- NodeJS and PostgreSQL for running locally
+- NodeJS, Redis and PostgreSQL for running locally
 
 ## Installation
 
 ```bash
 docker-compose up
 ```
+
+## Postman Collection
+
+<https://www.postman.com/jesusjimenezg/workspace/void-backend-test>
