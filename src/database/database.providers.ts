@@ -1,4 +1,4 @@
-import { REPOSITORIES } from '../config/constants';
+import { REPOSITORIES } from '../shared/constants/constants';
 import DataSource from './data.source';
 
 export const databaseProviders = [

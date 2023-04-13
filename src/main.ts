@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app/app.module';
-import { GLOBAL_PREFIX, SWAGGER } from './config/constants';
+import { GLOBAL_PREFIX, SWAGGER } from './shared/constants/constants';
 import { swaggerBuilder } from './swagger/swagger.builder';
 
 async function bootstrap() {

@@ -1,5 +1,5 @@
 import { DocumentBuilder } from '@nestjs/swagger';
-import { SWAGGER } from '../config/constants';
+import { SWAGGER } from '../shared/constants/constants';
 
 export const swaggerBuilder = () => {
   const builder = new DocumentBuilder()
