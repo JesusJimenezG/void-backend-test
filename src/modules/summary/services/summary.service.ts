@@ -99,7 +99,7 @@ export class SummaryService {
     return playerSummary;
   }
 
-  async getLeaderboard(region: string, summonerName: string) {
+  async getLeaderboard(region: string) {
     // Get all player summaries for the given region
     const playerSummaries = await this.playerSummaryRepository.find({
       relations: ['summoner', 'leagues'],
@@ -127,7 +127,7 @@ export class SummaryService {
       );
 
       return {
-        playerId: playerSummary.playerId,
+        summonerName: playerSummary.summoner.name,
         wins,
         losses,
         leaguePoints,
@@ -138,10 +138,11 @@ export class SummaryService {
     const leaguePointsSorted = [...stats].sort(
       (a, b) => b.leaguePoints - a.leaguePoints,
     );
+
     // Calculate positions
     const leaguePointsPositions = new Map<string, number>();
     leaguePointsSorted.forEach((stat, index) => {
-      leaguePointsPositions.set(stat.playerId, index + 1);
+      leaguePointsPositions.set(stat.summonerName, index + 1);
     });
 
     // Sort by win rate
@@ -151,19 +152,27 @@ export class SummaryService {
     // Calculate positions
     const winRatePositions = new Map<string, number>();
     winRateSorted.forEach((stat, index) => {
-      winRatePositions.set(stat.playerId, index + 1);
+      winRatePositions.set(stat.summonerName, index + 1);
     });
 
-    // Get the player summary for the given summoner name
-    const summonerPlayerSummary = playerSummaries.find(
-      (playerSummary) => playerSummary.summoner.name === summonerName,
-    );
+    // Build the output object
+    const output = {};
+    stats.forEach((stat) => {
+      output[stat.summonerName] = {
+        leaguePoints: {
+          top: leaguePointsPositions.get(stat.summonerName),
+        },
+        winRate: {
+          top: winRatePositions.get(stat.summonerName),
+        },
+      };
+    });
 
-    return {
-      leaguePoints: {
-        top: leaguePointsPositions.get(summonerPlayerSummary.playerId),
-      },
-      winRate: { top: winRatePositions.get(summonerPlayerSummary.playerId) },
-    };
+    return output;
+  }
+
+  async getLeaderboardBySummonerName(region: string, summonerName: string) {
+    const leaderboard = await this.getLeaderboard(region);
+    return leaderboard[summonerName];
   }
 }

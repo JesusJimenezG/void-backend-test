@@ -23,6 +23,12 @@ export class SummaryController {
     private readonly summaryService: SummaryService,
   ) {}
 
+  @Get(':region/leaderboard')
+  @UseInterceptors(CacheInterceptor)
+  getLeaderboard(@Param('region') region: string) {
+    return this.summaryService.getLeaderboard(region);
+  }
+
   @Get(':region/:summonerName/matches')
   @UseInterceptors(CacheInterceptor)
   getPlayerRecentMatches(
@@ -49,10 +55,13 @@ export class SummaryController {
 
   @Get(':region/:summonerName/leaderboard')
   @UseInterceptors(CacheInterceptor)
-  getLeaderboard(
+  getLeaderboardBySummonerName(
     @Param('region') region: string,
     @Param('summonerName') summonerName: string,
   ) {
-    return this.summaryService.getLeaderboard(region, summonerName);
+    return this.summaryService.getLeaderboardBySummonerName(
+      region,
+      summonerName,
+    );
   }
 }
