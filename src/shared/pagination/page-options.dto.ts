@@ -1,7 +1,10 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Order } from '../constants/constants';
+import { Order, Queues } from '../constants/constants';
 
 export class PageOptionsDto {
+  @ApiPropertyOptional({ enum: Queues, default: Queues.ALL })
+  readonly queueId?: Queues = Queues.ALL;
+
   @ApiPropertyOptional({ enum: Order, default: Order.ASC })
   readonly order?: Order = Order.ASC;
 

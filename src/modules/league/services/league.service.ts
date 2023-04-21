@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { League } from '../entities/league.entity';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -109,8 +115,17 @@ export class LeagueService {
       summonerName,
     );
     // Fetch league from Riot API
-    const data: CreateLeagueDto[] =
-      await this.riotService.fetchLeagueBySummonerId(region, summoner.id);
+    let data: CreateLeagueDto[];
+    try {
+      data = await this.riotService.fetchLeagueBySummonerId(
+        region,
+        summoner.id,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Could not fetch Leagues from Riot API`,
+      );
+    }
     // Save league to database
     const leagues = await this.createMany(region, data);
     if (validLeague) {

@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Summoner } from '../entities/summoner.entity';
 import { RiotAPIService } from '../../riot-api/riot.api.service';
@@ -45,10 +50,14 @@ export class SummonerService {
 
     if (!summoner) {
       // Fetch summoner from Riot API
-      const data = await this.riotService.fetchSummonerByName(
-        region,
-        summonerName,
-      );
+      let data: CreateSummonerDto;
+      try {
+        data = await this.riotService.fetchSummonerByName(region, summonerName);
+      } catch (error) {
+        throw new InternalServerErrorException(
+          `Could not fetch summoner from Riot API`,
+        );
+      }
       // Save summoner to database
       let newSummoner = new CreateSummonerDto();
       newSummoner = { ...summoner, ...data, region: region };

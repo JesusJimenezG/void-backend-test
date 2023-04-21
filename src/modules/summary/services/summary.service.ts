@@ -35,6 +35,7 @@ export class SummaryService {
       region,
       summonerName,
     );
+    console.log(summoner);
     const { data } = await this.matchService.findRecentSummonerMatches(
       region,
       summoner.name,

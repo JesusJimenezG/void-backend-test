@@ -1,4 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   Challenge,
@@ -160,13 +164,20 @@ export class MatchService {
       return new PageDto(matches, pageMetaDto);
     }
 
-    const data = await this.riotService.fetchMatchesBySummonerPuuid(
-      region,
-      summoner.puuid,
-      0,
-      pageOptionsDto.take,
-      queueId ? +queueId : undefined,
-    );
+    let data;
+    try {
+      data = await this.riotService.fetchMatchesBySummonerPuuid(
+        region,
+        summoner.puuid,
+        0,
+        pageOptionsDto.take,
+        queueId ? +queueId : undefined,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Could not fetch matches from Riot API',
+      );
+    }
     for (const matchId of data) {
       await this.matchFromRiot(region, summoner, matchId);
     }

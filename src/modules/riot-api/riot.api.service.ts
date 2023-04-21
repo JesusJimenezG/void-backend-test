@@ -20,7 +20,7 @@ export class RiotAPIService {
     summonerName: string,
   ): Promise<CreateSummonerDto> {
     const urlName = summonerName.replace(' ', '');
-    const url = `https://${region}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${urlName}`;
+    const url = `https://${region.toLocaleLowerCase()}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${urlName}`;
     const data = await this.fetchFromRiotAPI(url);
     return data;
   }
@@ -29,7 +29,7 @@ export class RiotAPIService {
     region: string,
     summonerId: string,
   ): Promise<CreateLeagueDto[]> {
-    const url = `https://${region}.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`;
+    const url = `https://${region.toLocaleLowerCase()}.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`;
     const data = await this.fetchFromRiotAPI(url);
     return data;
   }
@@ -69,6 +69,7 @@ export class RiotAPIService {
         headers: {
           'X-Riot-Token': token,
         },
+        timeout: 10000,
       })
       .pipe(
         catchError((error) => {

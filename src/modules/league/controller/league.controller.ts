@@ -12,12 +12,11 @@ import {
 import { LeagueService } from '../services/league.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateLeagueDto, UpdateLeagueDto } from '../dto/league.dto';
-import { CacheInterceptor } from '@nestjs/cache-manager';
 import { RegionInterceptor } from '../../../shared/interceptors/region.interceptor';
 
 @ApiTags('League')
 @Controller('league')
-@UseInterceptors(CacheInterceptor, RegionInterceptor)
+@UseInterceptors(RegionInterceptor)
 export class LeagueController {
   constructor(private readonly leagueService: LeagueService) {}
 

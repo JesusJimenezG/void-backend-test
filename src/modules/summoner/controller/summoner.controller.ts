@@ -8,7 +8,6 @@ import {
   Delete,
   UseInterceptors,
 } from '@nestjs/common';
-import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { SummonerService } from '../services/summoner.service';
 import { ApiTags } from '@nestjs/swagger';
 import { RegionInterceptor } from '../../../shared/interceptors/region.interceptor';
@@ -28,14 +27,14 @@ export class SummonerController {
     return this.summonerService.create(region, createSummonerDto);
   }
 
-  @Get(':region/summoners')
   // @UseInterceptors(CacheInterceptor)
+  @Get(':region/summoners')
   findAll(@Param('region') region: string) {
     return this.summonerService.findAll(region);
   }
 
-  @Get(':region/:summonerName')
   // @UseInterceptors(CacheInterceptor)
+  @Get(':region/:summonerName')
   findBySummonerName(
     @Param('region') region: string,
     @Param('summonerName') summonerName: string,

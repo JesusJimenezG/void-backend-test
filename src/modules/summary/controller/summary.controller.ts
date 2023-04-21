@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  Param,
-  UseInterceptors,
-  Inject,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, UseInterceptors, Query } from '@nestjs/common';
 import { SummaryService } from '../services/summary.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
 import { RegionInterceptor } from '../../../shared/interceptors/region.interceptor';
 import { PageOptionsDto } from '../../../shared/pagination/page-options.dto';
 
@@ -18,19 +9,19 @@ import { PageOptionsDto } from '../../../shared/pagination/page-options.dto';
 @UseInterceptors(RegionInterceptor)
 export class SummaryController {
   constructor(
-    @Inject(CACHE_MANAGER)
-    private readonly cacheManager: Cache,
+    // @Inject(CACHE_MANAGER)
+    // private readonly cacheManager: Cache,
     private readonly summaryService: SummaryService,
   ) {}
 
+  // @UseInterceptors(CacheInterceptor)
   @Get(':region/leaderboard')
-  @UseInterceptors(CacheInterceptor)
   getLeaderboard(@Param('region') region: string) {
     return this.summaryService.getLeaderboard(region);
   }
 
+  // @UseInterceptors(CacheInterceptor)
   @Get(':region/:summonerName/matches')
-  @UseInterceptors(CacheInterceptor)
   getPlayerRecentMatches(
     @Param('region') region: string,
     @Param('summonerName') summonerName: string,
@@ -43,8 +34,8 @@ export class SummaryController {
     );
   }
 
+  // @UseInterceptors(CacheInterceptor)
   @Get(':region/:summonerName')
-  @UseInterceptors(CacheInterceptor)
   getPlayerSummary(
     @Param('region') region: string,
     @Param('summonerName') summonerName: string,
@@ -53,8 +44,8 @@ export class SummaryController {
     return this.summaryService.getPlayerSummary(region, summonerName, queueId);
   }
 
+  // @UseInterceptors(CacheInterceptor)
   @Get(':region/:summonerName/leaderboard')
-  @UseInterceptors(CacheInterceptor)
   getLeaderboardBySummonerName(
     @Param('region') region: string,
     @Param('summonerName') summonerName: string,

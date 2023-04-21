@@ -19,15 +19,15 @@ export class RegionInterceptor implements NestInterceptor {
       request.params.region = region;
       return next.handle();
     } catch (error) {
-      throw new HttpException(
-        `Invalid region: ${region}`,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
   validRegion(region: string) {
     const regionUppercase = region.toUpperCase();
     const validRegion = REGIONS[regionUppercase];
+    if (!validRegion) {
+      throw new Error(`Invalid region: ${region}`);
+    }
     return validRegion;
   }
 }

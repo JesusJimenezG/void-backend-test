@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Query, UseInterceptors } from '@nestjs/common';
 import { MatchService } from '../services/match.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CacheInterceptor } from '@nestjs/cache-manager';
 import { RegionInterceptor } from '../../../shared/interceptors/region.interceptor';
 import { PageOptionsDto } from '../../../shared/pagination/page-options.dto';
 
@@ -17,7 +16,6 @@ export class MatchController {
   }
 
   @Get(':region/:summonerName')
-  @UseInterceptors(CacheInterceptor)
   findRecentSummonerMatches(
     @Param('region') region: string,
     @Param('summonerName') summonerName: string,

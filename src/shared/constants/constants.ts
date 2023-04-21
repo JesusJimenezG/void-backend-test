@@ -42,6 +42,26 @@ export enum Order {
   DESC = 'DESC',
 }
 
+export enum Queues {
+  RANKED_SOLO_5x5 = 420,
+  RANKED_FLEX_SR = 440,
+  ARAM = 450,
+  NORMAL_BLIND_PICK = 430,
+  NORMAL_DRAFT_PICK = 400,
+  CLASH = 700,
+  ALL = 0,
+}
+
+export const QUEUE_TYPES = {
+  420: 'RANKED_SOLO_5x5',
+  440: 'RANKED_FLEX_SR',
+  450: 'ARAM',
+  430: 'NORMAL_BLIND_PICK',
+  400: 'NORMAL_DRAFT_PICK',
+  700: 'CLASH',
+  0: 'ALL',
+};
+
 export const REGIONS = {
   BR1: 'BR1',
   EUN1: 'EUN1',
@@ -66,14 +86,4 @@ export const SERVERS = {
   ASIA: 'ASIA',
   EUROPE: 'EUROPE',
   SEA: 'SEA',
-};
-
-export const QUEUE_TYPES = {
-  420: 'RANKED_SOLO_5x5',
-  440: 'RANKED_FLEX_SR',
-  450: 'ARAM',
-  430: 'NORMAL_BLIND_PICK',
-  400: 'NORMAL_DRAFT_PICK',
-  700: 'CLASH',
-  0: 'ALL',
 };
