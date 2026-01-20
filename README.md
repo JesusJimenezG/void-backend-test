@@ -72,7 +72,7 @@ void-backend-test/
    ```
 
 4. **Access the application**
-   - Frontend: http://localhost:3000
+   - Frontend: http://localhost:3001
    - Backend API: http://localhost:4000
    - Swagger Docs: http://localhost:4000/api
 
