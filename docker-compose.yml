@@ -33,17 +33,7 @@ services:
       - void-postgres
     networks:
       - void-network
-      - dokploy-network
     restart: on-failure
-    labels:
-      - "traefik.enable=true"
-      # Backend API router - matches /api paths
-      - "traefik.http.routers.void-backend-app.rule=Host(`arcane-stats.jesusjimenez.dev`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.void-backend-app.entrypoints=websecure"
-      - "traefik.http.routers.void-backend-app.tls=true"
-      - "traefik.http.routers.void-backend-app.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.void-backend-app.priority=100"
-      - "traefik.http.services.void-backend-app.loadbalancer.server.port=4000"
 
   void-frontend:
     build:
@@ -60,17 +50,31 @@ services:
       - void-backend
     networks:
       - void-network
+    restart: on-failure
+
+  # === NGINX GATEWAY ===
+  # Single entry point that routes to frontend and backend
+  void-gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: void-gateway
+    expose:
+      - "80"
+    depends_on:
+      - void-frontend
+      - void-backend
+    networks:
+      - void-network
       - dokploy-network
     restart: on-failure
     labels:
       - "traefik.enable=true"
-      # Frontend router - catches all other requests
-      - "traefik.http.routers.void-frontend-app.rule=Host(`arcane-stats.jesusjimenez.dev`)"
-      - "traefik.http.routers.void-frontend-app.entrypoints=websecure"
-      - "traefik.http.routers.void-frontend-app.tls=true"
-      - "traefik.http.routers.void-frontend-app.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.void-frontend-app.priority=1"
-      - "traefik.http.services.void-frontend-app.loadbalancer.server.port=80"
+      - "traefik.http.routers.void-gateway.rule=Host(`arcane-stats.jesusjimenez.dev`)"
+      - "traefik.http.routers.void-gateway.entrypoints=websecure"
+      - "traefik.http.routers.void-gateway.tls=true"
+      - "traefik.http.routers.void-gateway.tls.certresolver=letsencrypt"
+      - "traefik.http.services.void-gateway.loadbalancer.server.port=80"
 
 networks:
   void-network:
