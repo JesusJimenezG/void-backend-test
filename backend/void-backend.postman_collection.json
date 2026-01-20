@@ -1,0 +1,673 @@
+{
+    "info": {
+        "_postman_id": "void-backend-collection",
+        "name": "Void Backend",
+        "description": "Postman collection for Void Backend API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Summoner",
+            "item": [
+                {
+                    "name": "Get Summoner by Riot ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/summoner/:region/:gameName/:tagLine",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "summoner",
+                                ":region",
+                                ":gameName",
+                                ":tagLine"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}",
+                                    "description": "Region (e.g. NA1, EUW1)"
+                                },
+                                {
+                                    "key": "gameName",
+                                    "value": "Stoned Jesus",
+                                    "description": "Riot ID Game Name"
+                                },
+                                {
+                                    "key": "tagLine",
+                                    "value": "LAN",
+                                    "description": "Riot ID Tag Line"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Summoner",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"id\": \"summoner-id\",\n  \"accountId\": \"account-id\",\n  \"puuid\": \"puuid\",\n  \"name\": \"SummonerName\",\n  \"profileIconId\": 1,\n  \"revisionDate\": 1672531200000,\n  \"summonerLevel\": 30,\n  \"region\": \"NA1\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/summoner/:region",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "summoner",
+                                ":region"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Summoners",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/summoner/:region/summoners",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "summoner",
+                                ":region",
+                                "summoners"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Summoner",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"summonerLevel\": 31\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/summoner/:region/:gameName/:tagLine",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "summoner",
+                                ":region",
+                                ":gameName",
+                                ":tagLine"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                },
+                                {
+                                    "key": "gameName",
+                                    "value": "Stoned Jesus"
+                                },
+                                {
+                                    "key": "tagLine",
+                                    "value": "LAN"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Summoner",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/summoner/:region/:gameName/:tagLine",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "summoner",
+                                ":region",
+                                ":gameName",
+                                ":tagLine"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                },
+                                {
+                                    "key": "gameName",
+                                    "value": "Stoned Jesus"
+                                },
+                                {
+                                    "key": "tagLine",
+                                    "value": "LAN"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "League",
+            "description": "League/Ranked endpoints. Backend now uses PUUID-based Riot API endpoint (league-v4/entries/by-puuid) instead of deprecated by-summoner endpoint.",
+            "item": [
+                {
+                    "name": "Get League by Riot ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "description": "Fetches league entries for a player. Internally uses Riot API: GET /lol/league/v4/entries/by-puuid/{encryptedPUUID}",
+                        "url": {
+                            "raw": "{{base_url}}/api/league/:region/:gameName/:tagLine?queueId=",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "league",
+                                ":region",
+                                ":gameName",
+                                ":tagLine"
+                            ],
+                            "query": [
+                                {
+                                    "key": "queueId",
+                                    "value": "",
+                                    "description": "Optional queue ID (420 = Solo/Duo, 440 = Flex)"
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                },
+                                {
+                                    "key": "gameName",
+                                    "value": "Stoned Jesus"
+                                },
+                                {
+                                    "key": "tagLine",
+                                    "value": "LAN"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Leagues",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/league/:region/leagues",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "league",
+                                ":region",
+                                "leagues"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create League",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"leagueId\": \"league-id\",\n  \"summonerId\": \"summoner-id\",\n  \"summonerName\": \"Doublelift\",\n  \"queueType\": \"RANKED_SOLO_5x5\",\n  \"tier\": \"GOLD\",\n  \"rank\": \"I\",\n  \"leaguePoints\": 0,\n  \"wins\": 10,\n  \"losses\": 5,\n  \"hotStreak\": false,\n  \"veteran\": false,\n  \"freshBlood\": false,\n  \"inactive\": false,\n  \"region\": \"NA1\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/league/:region",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "league",
+                                ":region"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update League",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"leaguePoints\": 20\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/league/:region/:leagueId",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "league",
+                                ":region",
+                                ":leagueId"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                },
+                                {
+                                    "key": "leagueId",
+                                    "value": "league-id"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete League",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/league/:region/:leagueId",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "league",
+                                ":region",
+                                ":leagueId"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                },
+                                {
+                                    "key": "leagueId",
+                                    "value": "league-id"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Summary",
+            "item": [
+                {
+                    "name": "Get Player Summary by Riot ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/summary/:region/:gameName/:tagLine?queueId=",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "summary",
+                                ":region",
+                                ":gameName",
+                                ":tagLine"
+                            ],
+                            "query": [
+                                {
+                                    "key": "queueId",
+                                    "value": "",
+                                    "description": "Optional queue ID"
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                },
+                                {
+                                    "key": "gameName",
+                                    "value": "Stoned Jesus"
+                                },
+                                {
+                                    "key": "tagLine",
+                                    "value": "LAN"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Player Recent Matches",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/summary/:region/:gameName/:tagLine/matches?page=1&take=10&queueId=ALL&order=ASC",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "summary",
+                                ":region",
+                                ":gameName",
+                                ":tagLine",
+                                "matches"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "take",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "queueId",
+                                    "value": "ALL"
+                                },
+                                {
+                                    "key": "order",
+                                    "value": "ASC"
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                },
+                                {
+                                    "key": "gameName",
+                                    "value": "Stoned Jesus"
+                                },
+                                {
+                                    "key": "tagLine",
+                                    "value": "LAN"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Leaderboard",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/summary/:region/leaderboard",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "summary",
+                                ":region",
+                                "leaderboard"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Leaderboard by Riot ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/summary/:region/:gameName/:tagLine/leaderboard",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "summary",
+                                ":region",
+                                ":gameName",
+                                ":tagLine",
+                                "leaderboard"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                },
+                                {
+                                    "key": "gameName",
+                                    "value": "Stoned Jesus"
+                                },
+                                {
+                                    "key": "tagLine",
+                                    "value": "LAN"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Match",
+            "item": [
+                {
+                    "name": "Get All Matches (Region)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/match/:region/matches",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "match",
+                                ":region",
+                                "matches"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Recent Matches by Riot ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/match/:region/:gameName/:tagLine?page=1&take=10&queueId=ALL&order=ASC",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "match",
+                                ":region",
+                                ":gameName",
+                                ":tagLine"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "take",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "queueId",
+                                    "value": "ALL"
+                                },
+                                {
+                                    "key": "order",
+                                    "value": "ASC"
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                },
+                                {
+                                    "key": "gameName",
+                                    "value": "Stoned Jesus"
+                                },
+                                {
+                                    "key": "tagLine",
+                                    "value": "LAN"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Match by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/match/:region/:gameName/:tagLine/:matchId",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "match",
+                                ":region",
+                                ":gameName",
+                                ":tagLine",
+                                ":matchId"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "region",
+                                    "value": "{{default_region}}"
+                                },
+                                {
+                                    "key": "gameName",
+                                    "value": "Stoned Jesus"
+                                },
+                                {
+                                    "key": "tagLine",
+                                    "value": "LAN"
+                                },
+                                {
+                                    "key": "matchId",
+                                    "value": "match-id"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:4000",
+            "type": "string"
+        },
+        {
+            "key": "default_region",
+            "value": "NA1",
+            "type": "string"
+        }
+    ]
+}

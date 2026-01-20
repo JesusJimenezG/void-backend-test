@@ -1,50 +1,82 @@
-version: '3'
+version: '3.8'
 
 services:
-  void-backend-test:
-    image: node:18.15.0-alpine3.17
-    working_dir: /usr/src/app
+  void-postgres:
+    image: postgres:15-alpine
+    container_name: void-postgres
+    ports:
+      - "5433:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - void-network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.40'
+          memory: 128M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+
+  void-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: void-backend
     ports:
-      - 4000:4000
-    volumes:
-      - .:/usr/src/app
-    command: npm run start:dev
-    environment:
-      - NODE_ENV=dev
+      - "${PORT:-4000}:4000"
     env_file:
-      - .env.dev
+      - .env
+    environment:
+      # Override localhost with service name for Docker networking
+      - TYPEORM_HOST=void-postgres
+      - TYPEORM_PORT=5432
     depends_on:
       - void-postgres
     networks:
       - void-network
+    restart: on-failure
+    deploy:
+      resources:
+        limits:
+          cpus: '0.40'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
 
-  void-postgres:
-    image: postgres:15.2-alpine3.17
-    container_name: void-postgres
+  void-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:4000}
+    container_name: void-frontend
     ports:
-      - 5432:5432
+      - "3000:80"
     environment:
-      POSTGRES_USER: void
-      POSTGRES_PASSWORD: void
-      POSTGRES_DB: void
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:4000}
+    depends_on:
+      - void-backend
     networks:
       - void-network
-  # redis:
-  #   image: redis:7.0.10-alpine
-  #   ports:
-  #     - "6379:6379"
-  #   networks:
-  #     - void-network
-
-  # redis-insight:
-  #   image: redislabs/redisinsight:latest
-  #   depends_on:
-  #     - redis
-  #   ports:
-  #     - "8001:8001"
-  #   networks:
-  #     - void-network
+    restart: on-failure
+    deploy:
+      resources:
+        limits:
+          cpus: '0.40'
+          memory: 96M
+        reservations:
+          cpus: '0.05'
+          memory: 48M
 
 networks:
   void-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,0 +1,278 @@
+/* ============================================
+   GLOBAL STYLES - FOR DEMACIA THEME
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import './variables.css';
+
+/* === RESET & BASE === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-demacia-deep);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* === TYPOGRAPHY === */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--petricite-white);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.875rem; }
+
+p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+a {
+  color: var(--celestial-blue);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--demacia-gold-light);
+  text-shadow: 0 0 12px var(--gold-glow);
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-demacia-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--demacia-gold-dark), var(--demacia-gold));
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--bg-demacia-deep);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--demacia-gold), var(--demacia-gold-light));
+}
+
+/* === SELECTION === */
+::selection {
+  background-color: var(--demacia-gold);
+  color: var(--bg-demacia-deep);
+}
+
+/* === UTILITY CLASSES === */
+.text-gold { color: var(--demacia-gold) !important; }
+.text-blue { color: var(--celestial-blue) !important; }
+.text-muted { color: var(--text-muted) !important; }
+.text-win { color: var(--win-green) !important; }
+.text-loss { color: var(--loss-red) !important; }
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-sm { gap: var(--space-sm); }
+.gap-md { gap: var(--space-md); }
+.gap-lg { gap: var(--space-lg); }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+
+.overflow-hidden { overflow: hidden; }
+
+/* === GLASS PANEL (Petricite Style) === */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--demacia-gold),
+    var(--demacia-gold-light),
+    var(--demacia-gold),
+    transparent
+  );
+  opacity: 0.7;
+}
+
+.glass-panel-dark {
+  background: var(--bg-glass-darker);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border-subtle);
+  border-radius: var(--radius-md);
+}
+
+/* === GLOW EFFECTS === */
+.glow-gold {
+  box-shadow: var(--glow-gold);
+}
+
+.glow-blue {
+  box-shadow: var(--glow-blue);
+}
+
+.glow-win {
+  box-shadow: var(--glow-green);
+}
+
+.glow-loss {
+  box-shadow: var(--glow-red);
+}
+
+/* === LOADING SKELETON === */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-glass) 25%,
+    var(--bg-glass-lighter) 50%,
+    var(--bg-glass) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* === DIVIDER (Gold Demacian Style) === */
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--demacia-gold-dark) 20%,
+    var(--demacia-gold) 50%,
+    var(--demacia-gold-dark) 80%,
+    transparent
+  );
+  margin: var(--space-lg) 0;
+}
+
+.divider-vertical {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--demacia-gold-dark) 20%,
+    var(--demacia-gold) 50%,
+    var(--demacia-gold-dark) 80%,
+    transparent
+  );
+}
+
+/* === DEMACIA BUTTON === */
+.demacia-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--bg-demacia-deep);
+  background: linear-gradient(135deg, var(--demacia-gold), var(--demacia-gold-light));
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.demacia-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.demacia-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-gold);
+}
+
+.demacia-button:hover::before {
+  left: 100%;
+}
+
+.demacia-button:active {
+  transform: translateY(0);
+}
+
+.demacia-button--outline {
+  background: transparent;
+  color: var(--demacia-gold);
+  border: 2px solid var(--demacia-gold);
+}
+
+.demacia-button--outline:hover {
+  background: rgba(201, 162, 39, 0.1);
+  color: var(--demacia-gold-light);
+}

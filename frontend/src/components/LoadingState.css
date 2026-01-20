@@ -1,0 +1,118 @@
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: var(--space-2xl);
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+/* === DEMACIA SPINNER === */
+.hextech-spinner {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.spinner-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.spinner-ring-1 {
+  border-top-color: var(--demacia-gold);
+  animation: spin 1.5s linear infinite;
+}
+
+.spinner-ring-2 {
+  inset: 10px;
+  border-right-color: var(--celestial-blue);
+  animation: spin 2s linear infinite reverse;
+}
+
+.spinner-ring-3 {
+  inset: 20px;
+  border-bottom-color: var(--demacia-gold-light);
+  animation: spin 2.5s linear infinite;
+}
+
+.spinner-core {
+  position: absolute;
+  inset: 35px;
+  background: radial-gradient(
+    circle,
+    var(--demacia-gold) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* === LOADING TEXT === */
+.loading-text {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+.loading-text-main {
+  background: linear-gradient(90deg, var(--demacia-gold), var(--demacia-gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.loading-dots {
+  display: flex;
+}
+
+.loading-dots span {
+  animation: dot-bounce 1.4s ease-in-out infinite;
+  color: var(--demacia-gold);
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dot-bounce {
+  0%, 80%, 100% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 1;
+  }
+}
