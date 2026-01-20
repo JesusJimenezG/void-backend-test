@@ -1,7 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import type { ApiResponse } from "../types";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+// Use strict undefined check: empty string "" is valid for relative paths in production
+// This prevents falling back to localhost when VITE_API_URL is explicitly set to ""
+const BASE_URL =
+  import.meta.env.VITE_API_URL !== undefined
+    ? import.meta.env.VITE_API_URL
+    : "http://localhost:4000";
+
+// In production with VITE_API_URL="", this becomes "/api" (relative path)
+// In development, this becomes "http://localhost:4000/api"
 const API_BASE_URL = `${BASE_URL}/api`;
 
 interface UseFetchOptions {

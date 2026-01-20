@@ -60,13 +60,17 @@ export function SummonerDashboard({
       order: "DESC",
     });
 
-    // Use the specific match endpoint as provided in curl example
-    const url = `/api/match/${region}/${encodeURIComponent(displayName)}/${encodeURIComponent(displayTag)}?${query}`;
+    // URL path without the /api prefix - we'll add it via BASE_URL
+    const matchPath = `/match/${region}/${encodeURIComponent(displayName)}/${encodeURIComponent(displayTag)}?${query}`;
 
     try {
-      // Use direct fetch for manual trigger
-      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:4000";
-      const response = await fetch(`${baseUrl}${url}`);
+      // Use strict undefined check for VITE_API_URL (empty string = relative path for production)
+      const baseUrl =
+        import.meta.env.VITE_API_URL !== undefined
+          ? import.meta.env.VITE_API_URL
+          : "http://localhost:4000";
+      // Construct full URL: baseUrl + "/api" + matchPath
+      const response = await fetch(`${baseUrl}/api${matchPath}`);
       if (!response.ok) throw new Error("Failed to load more matches");
 
       const result = await response.json();

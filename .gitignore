@@ -13,6 +13,7 @@
 .env.prod
 .env.test
 .env.dev
+.env.dokploy
 
 # Keep .env.example for documentation
 !.env.example
