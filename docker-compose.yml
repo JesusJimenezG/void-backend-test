@@ -33,25 +33,20 @@ services:
       - void-network
       - dokploy-network
     restart: on-failure
-    labels:
-      - "traefik.enable=true"
-      # ROUTING: High Priority ensures this is checked BEFORE the frontend catch-all
-      - "traefik.http.routers.void-backend.priority=100"
-      - "traefik.http.routers.void-backend.rule=Host(`arcane-stats.jesusjimenez.dev`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.void-backend.entrypoints=websecure"
-      - "traefik.http.routers.void-backend.tls.certresolver=letsencrypt"
-      
-      # REMOVED STRIPPREFIX: We pass the full "/api/..." path to the backend
-      # assuming your Express app expects /api in its routes.
-      
-      - "traefik.http.services.void-backend.loadbalancer.server.port=4000"
+    # NOTE: Traefik labels are configured via Dokploy UI (Domains tab)
+    # If using manual labels, uncomment below:
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.void-backend.priority=100"
+    #   - "traefik.http.routers.void-backend.rule=Host(`arcane-stats.jesusjimenez.dev`) && PathPrefix(`/api`)"
+    #   - "traefik.http.routers.void-backend.entrypoints=websecure"
+    #   - "traefik.http.routers.void-backend.tls.certresolver=letsencrypt"
+    #   - "traefik.http.services.void-backend.loadbalancer.server.port=4000"
 
   void-frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      # FIX 1: Set to empty string. 
-      # Your code does `axios.get('/api/...')`, so this results in `/api/...` (Relative)
       args:
         VITE_API_URL: ""
     container_name: void-frontend
@@ -63,14 +58,15 @@ services:
       - void-network
       - dokploy-network
     restart: on-failure
-    labels:
-      - "traefik.enable=true"
-      # ROUTING: Low Priority so it only catches what the backend missed
-      - "traefik.http.routers.void-frontend.priority=1"
-      - "traefik.http.routers.void-frontend.rule=Host(`arcane-stats.jesusjimenez.dev`)"
-      - "traefik.http.routers.void-frontend.entrypoints=websecure"
-      - "traefik.http.routers.void-frontend.tls.certresolver=letsencrypt"
-      - "traefik.http.services.void-frontend.loadbalancer.server.port=80"
+    # NOTE: Traefik labels are configured via Dokploy UI (Domains tab)
+    # If using manual labels, uncomment below:
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.void-frontend.priority=1"
+    #   - "traefik.http.routers.void-frontend.rule=Host(`arcane-stats.jesusjimenez.dev`)"
+    #   - "traefik.http.routers.void-frontend.entrypoints=websecure"
+    #   - "traefik.http.routers.void-frontend.tls.certresolver=letsencrypt"
+    #   - "traefik.http.services.void-frontend.loadbalancer.server.port=80"
 
 networks:
   void-network:
