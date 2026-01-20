@@ -4,7 +4,6 @@ services:
   void-postgres:
     image: postgres:15-alpine
     container_name: void-postgres
-    # No ports exposed to host, only internal network
     env_file:
       - .env
     volumes:
@@ -17,9 +16,6 @@ services:
         limits:
           cpus: '0.40'
           memory: 128M
-        reservations:
-          cpus: '0.10'
-          memory: 64M
 
   void-backend:
     build:
@@ -39,28 +35,28 @@ services:
     restart: on-failure
     labels:
       - "traefik.enable=true"
-      # 1. Define the Router: Capture traffic for your domain AND the /api path
+      # ROUTING: High Priority ensures this is checked BEFORE the frontend catch-all
+      - "traefik.http.routers.void-backend.priority=100"
       - "traefik.http.routers.void-backend.rule=Host(`arcane-stats.jesusjimenez.dev`) && PathPrefix(`/api`)"
       - "traefik.http.routers.void-backend.entrypoints=websecure"
       - "traefik.http.routers.void-backend.tls.certresolver=letsencrypt"
       
-      # 2. Define the Middleware: Strip "/api" so the backend code just sees "/users" instead of "/api/users"
-      - "traefik.http.middlewares.void-strip.stripprefix.prefixes=/api"
-      - "traefik.http.routers.void-backend.middlewares=void-strip"
+      # REMOVED STRIPPREFIX: We pass the full "/api/..." path to the backend
+      # assuming your Express app expects /api in its routes.
       
-      # 3. Define the Service Port (Internal Container Port)
       - "traefik.http.services.void-backend.loadbalancer.server.port=4000"
 
   void-frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      # FIX 1: Set to empty string. 
+      # Your code does `axios.get('/api/...')`, so this results in `/api/...` (Relative)
       args:
-        # VITAL: Now the API URL is the same domain, but with the /api suffix
-        VITE_API_URL: https://arcane-stats.jesusjimenez.dev/api
+        VITE_API_URL: ""
     container_name: void-frontend
     environment:
-      - VITE_API_URL=https://arcane-stats.jesusjimenez.dev/api
+      - VITE_API_URL=
     depends_on:
       - void-backend
     networks:
@@ -69,12 +65,11 @@ services:
     restart: on-failure
     labels:
       - "traefik.enable=true"
-      # 1. Define the Router: Capture EVERYTHING else on this domain
+      # ROUTING: Low Priority so it only catches what the backend missed
+      - "traefik.http.routers.void-frontend.priority=1"
       - "traefik.http.routers.void-frontend.rule=Host(`arcane-stats.jesusjimenez.dev`)"
       - "traefik.http.routers.void-frontend.entrypoints=websecure"
       - "traefik.http.routers.void-frontend.tls.certresolver=letsencrypt"
-      
-      # 2. Define the Service Port (Internal Nginx Port)
       - "traefik.http.services.void-frontend.loadbalancer.server.port=80"
 
 networks:
