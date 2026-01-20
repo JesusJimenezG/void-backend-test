@@ -27,21 +27,23 @@ services:
     environment:
       - TYPEORM_HOST=void-postgres
       - TYPEORM_PORT=5432
+    expose:
+      - "4000"
     depends_on:
       - void-postgres
     networks:
       - void-network
       - dokploy-network
     restart: on-failure
-    # NOTE: Traefik labels are configured via Dokploy UI (Domains tab)
-    # If using manual labels, uncomment below:
-    # labels:
-    #   - "traefik.enable=true"
-    #   - "traefik.http.routers.void-backend.priority=100"
-    #   - "traefik.http.routers.void-backend.rule=Host(`arcane-stats.jesusjimenez.dev`) && PathPrefix(`/api`)"
-    #   - "traefik.http.routers.void-backend.entrypoints=websecure"
-    #   - "traefik.http.routers.void-backend.tls.certresolver=letsencrypt"
-    #   - "traefik.http.services.void-backend.loadbalancer.server.port=4000"
+    labels:
+      - "traefik.enable=true"
+      # Backend API router - matches /api paths
+      - "traefik.http.routers.void-backend-app.rule=Host(`arcane-stats.jesusjimenez.dev`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.void-backend-app.entrypoints=websecure"
+      - "traefik.http.routers.void-backend-app.tls=true"
+      - "traefik.http.routers.void-backend-app.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.void-backend-app.priority=100"
+      - "traefik.http.services.void-backend-app.loadbalancer.server.port=4000"
 
   void-frontend:
     build:
@@ -52,21 +54,23 @@ services:
     container_name: void-frontend
     environment:
       - VITE_API_URL=
+    expose:
+      - "80"
     depends_on:
       - void-backend
     networks:
       - void-network
       - dokploy-network
     restart: on-failure
-    # NOTE: Traefik labels are configured via Dokploy UI (Domains tab)
-    # If using manual labels, uncomment below:
-    # labels:
-    #   - "traefik.enable=true"
-    #   - "traefik.http.routers.void-frontend.priority=1"
-    #   - "traefik.http.routers.void-frontend.rule=Host(`arcane-stats.jesusjimenez.dev`)"
-    #   - "traefik.http.routers.void-frontend.entrypoints=websecure"
-    #   - "traefik.http.routers.void-frontend.tls.certresolver=letsencrypt"
-    #   - "traefik.http.services.void-frontend.loadbalancer.server.port=80"
+    labels:
+      - "traefik.enable=true"
+      # Frontend router - catches all other requests
+      - "traefik.http.routers.void-frontend-app.rule=Host(`arcane-stats.jesusjimenez.dev`)"
+      - "traefik.http.routers.void-frontend-app.entrypoints=websecure"
+      - "traefik.http.routers.void-frontend-app.tls=true"
+      - "traefik.http.routers.void-frontend-app.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.void-frontend-app.priority=1"
+      - "traefik.http.services.void-frontend-app.loadbalancer.server.port=80"
 
 networks:
   void-network:
