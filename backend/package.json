@@ -23,7 +23,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "typeorm-ts-node-esm -d ./src/database/data.source.ts",
     "m:gen": "export NODE_ENV=dev && npm run typeorm migration:generate",
-    "m:run": "export NODE_ENV=dev && npm run typeorm migration:run"
+    "m:run": "export NODE_ENV=dev && npm run typeorm migration:run",
+    "db:sync": "ts-node src/scripts/sync-schema.ts",
+    "db:sync:prod": "node dist/scripts/sync-schema.js"
   },
   "dependencies": {
     "@nestjs/axios": "^2.0.0",
