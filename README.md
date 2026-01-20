@@ -1,43 +1,79 @@
-# VOID - League of Legends Stats Tracker
+# Arcane Stats - League of Legends Tracker
 
 A premium League of Legends stats tracking application with a beautiful Hextech-inspired UI. Built with NestJS backend and React + Vite frontend. Fully compliant with the latest Riot API v5 standards (Riot ID & PUUID support).
 
-![VOID Screenshot](docs/screenshot.png)
+![Arcane Stats Screenshot](docs/screenshot.png)
+
+## 🌐 Live Demo
+
+**[https://arcane-stats.jesusjimenez.dev](https://arcane-stats.jesusjimenez.dev)**
 
 ## 🚀 Features
 
-- **Summoner Search**: Look up any player by Riot ID
+- **Summoner Search**: Look up any player by Riot ID (gameName#tagLine)
 - **Match History**: View detailed match statistics with expandable cards
 - **Ranked Stats**: Track Solo/Duo and Flex queue rankings
+- **Performance Analytics**: KDA, damage, and game performance metrics
 - **Premium UI**: Hextech Glass design system with particles and animations
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    TRAEFIK (HTTPS)                      │
+│              arcane-stats.jesusjimenez.dev              │
+└─────────────────────────┬───────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│                  nginx-gateway:80                       │
+│               (Reverse Proxy Router)                    │
+├─────────────────────────┬───────────────────────────────┤
+│     /api/*              │           /*                  │
+│         │               │            │                  │
+│         ▼               │            ▼                  │
+│    Backend:4000         │      Frontend:80              │
+│      (NestJS)           │    (React + nginx)            │
+└─────────────────────────┴───────────────────────────────┘
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │  PostgreSQL DB  │
+                 └─────────────────┘
+```
 
 ## 📁 Project Structure
 
 ```
-void-backend-test/
-├── backend/          # NestJS API server
-│   ├── src/          # Source code
-│   ├── test/         # Test files
-│   └── Dockerfile    # Production build
-├── frontend/         # React + Vite application
-│   ├── src/          # Source code
+arcane-stats/
+├── backend/              # NestJS API server
+│   ├── src/
+│   │   ├── modules/      # Feature modules (summoner, match, league, etc.)
+│   │   ├── database/     # TypeORM configuration
+│   │   └── scripts/      # Utility scripts (db:sync)
+│   └── Dockerfile
+├── frontend/             # React + Vite application
+│   ├── src/
 │   │   ├── components/   # UI components
-│   │   ├── hooks/        # Custom React hooks
+│   │   ├── hooks/        # Custom React hooks (useFetch, etc.)
 │   │   ├── pages/        # Page components
 │   │   ├── styles/       # CSS design system
 │   │   └── types/        # TypeScript interfaces
-│   ├── Dockerfile    # Production build with nginx
-│   └── nginx.conf    # Web server configuration
-├── docker-compose.yml      # Production orchestration
-└── docker-compose.dev.yml  # Development orchestration
+│   ├── Dockerfile
+│   └── nginx.conf
+├── gateway/              # nginx reverse proxy
+│   ├── nginx.conf        # Routing rules (/api → backend, / → frontend)
+│   └── Dockerfile
+├── docker-compose.yml    # Production orchestration
+└── .env.example          # Environment template
 ```
 
 ## 🛠️ Quick Start
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (`npm install -g pnpm` or use corepack: `corepack enable`)
+- Node.js 20+
+- pnpm (`corepack enable` or `npm install -g pnpm`)
 - Docker & Docker Compose
 - Riot API Key ([Get one here](https://developer.riotgames.com/))
 
@@ -47,7 +83,7 @@ void-backend-test/
 
    ```bash
    git clone <repo-url>
-   cd void-backend-test
+   cd arcane-stats
    ```
 
 2. **Configure environment**
@@ -57,13 +93,15 @@ void-backend-test/
    # Edit .env and add your RIOT_API_KEY
    ```
 
-3. **Start development servers**
+3. **Start with Docker Compose**
 
    ```bash
-   # Using Docker (recommended)
-   docker-compose -f docker-compose.dev.yml up
+   docker-compose up --build
+   ```
 
-   # Or manually:
+   Or run services manually:
+
+   ```bash
    # Backend
    cd backend && pnpm install && pnpm run start:dev
 
@@ -72,68 +110,77 @@ void-backend-test/
    ```
 
 4. **Access the application**
-   - Frontend: http://localhost:3001
-   - Backend API: http://localhost:4000
-   - Swagger Docs: http://localhost:4000/api
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:4000/api
+   - Swagger Docs: http://localhost:4000/docs
 
-### Production Deployment (Dokploy / Docker Compose)
+### Production Deployment (Dokploy)
 
 This project is optimized for deployment on **Dokploy** using Docker Compose.
 
-**Resource Configuration:**
-To ensure a lightweight footprint suitable for showcase environments, the `docker-compose.yml` includes specific resource limits:
+1. Connect your repository to Dokploy
+2. Select "Docker Compose" as the deployment type
+3. Set Environment Variables in Dokploy UI:
+   - `RIOT_API_KEY` (required)
+   - `POSTGRES_PASSWORD` (generate a secure one)
+   - `TYPEORM_PASSWORD` (same as POSTGRES_PASSWORD)
+4. Add domain in Dokploy pointing to the `gateway` service on port 80
+5. Deploy!
 
-- **Database**: 128MB Limit / 64MB Reservation
-- **Backend**: 256MB Limit / 128MB Reservation
-- **Frontend**: 96MB Limit / 48MB Reservation
-- **Total Max Footprint**: ~480MB RAM
-
-**Deployment Steps:**
-
-1.  Connect your repository to Dokploy.
-2.  Select "Docker Compose" as the deployment type.
-3.  Set the Environment Variables in the Dokploy UI (specifically `RIOT_API_KEY`).
-4.  Deploy! Dokploy will respect the `deploy.resources` configuration in the compose file.
+**Initial Database Setup:**
 
 ```bash
-# To test production build locally:
-docker-compose up -d --build
+# SSH into server and run:
+docker exec arcane-backend node dist/scripts/sync-schema.js
 ```
 
 ## 🎨 Design System
 
-The frontend uses the **Hextech Glass** design system, featuring:
+The frontend uses the **Hextech Glass** design system:
 
-- **Color Palette**: Void deep backgrounds with gold and cyan accents
+- **Colors**: Deep backgrounds (#0a0a12) with gold (#c89b3c) and cyan (#0ac8b9) accents
 - **Typography**: Cinzel for headings, Inter for body text
-- **Effects**: Glassmorphism, particle animations, glows
+- **Effects**: Glassmorphism, particle animations, glowing borders
 - **Components**: Glass panels, animated buttons, status indicators
 
 ## 📡 API Endpoints
 
-A complete Postman collection is available at `backend/void-backend.postman_collection.json`. Import it into Postman to explore the API.
+| Endpoint                                       | Description                 |
+| ---------------------------------------------- | --------------------------- |
+| `GET /api/summoner/:region/:gameName/:tagLine` | Get summoner profile        |
+| `GET /api/summary/:region/:gameName/:tagLine`  | Get full player summary     |
+| `GET /api/match/:region/:gameName/:tagLine`    | Get paginated match history |
+| `GET /api/league/:region/:gameName/:tagLine`   | Get ranked entries          |
 
-| Endpoint                                   | Description             |
-| ------------------------------------------ | ----------------------- |
-| `GET /summoner/:region/:gameName/:tagLine` | Get summoner by Riot ID |
-| `GET /summary/:region/:gameName/:tagLine`  | Get player summary      |
-| `GET /match/:region/:gameName/:tagLine`    | Get recent matches      |
-| `GET /league/:region/:gameName/:tagLine`   | Get league entries      |
+Full Postman collection available at `backend/postman_collection.json`
 
 ## 🔧 Environment Variables
 
-| Variable            | Description       | Default                 |
-| ------------------- | ----------------- | ----------------------- |
-| `POSTGRES_USER`     | Database username | `void`                  |
-| `POSTGRES_PASSWORD` | Database password | `void`                  |
-| `POSTGRES_DB`       | Database name     | `void`                  |
-| `RIOT_API_KEY`      | Your Riot API key | Required                |
-| `VITE_API_URL`      | Backend API URL   | `http://localhost:4000` |
+| Variable              | Description                            | Required            |
+| --------------------- | -------------------------------------- | ------------------- |
+| `RIOT_API_KEY`        | Your Riot Games API key                | ✅                  |
+| `POSTGRES_USER`       | Database username                      | Default: `arcane`   |
+| `POSTGRES_PASSWORD`   | Database password                      | ✅                  |
+| `POSTGRES_DB`         | Database name                          | Default: `arcane`   |
+| `TYPEORM_HOST`        | DB host (use container name in Docker) | Default: `postgres` |
+| `TYPEORM_SYNCHRONIZE` | Auto-sync schema (set `false` in prod) | Default: `false`    |
 
-## 📜 License
+## 📦 Resource Requirements
 
-This project is not endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends.
+Optimized for lightweight deployment:
+
+| Service    | Memory Limit | Memory Reservation |
+| ---------- | ------------ | ------------------ |
+| PostgreSQL | 128MB        | 64MB               |
+| Backend    | 256MB        | 128MB              |
+| Frontend   | 96MB         | 48MB               |
+| Gateway    | 32MB         | 16MB               |
+| **Total**  | ~512MB       | ~256MB             |
+
+## 📜 Disclaimer
+
+This project is not endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc.
 
 ---
 
-Built with ❤️ using NestJS, React, and the power of the Void.
+Built with ❤️ using NestJS, React, and the Riot Games API.
