@@ -4,8 +4,7 @@ services:
   void-postgres:
     image: postgres:15-alpine
     container_name: void-postgres
-    ports:
-      - "5433:5432"
+    # No ports exposed to host, only internal network
     env_file:
       - .env
     volumes:
@@ -27,57 +26,62 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: void-backend
-    ports:
-      - "${PORT:-4000}:4000"
     env_file:
       - .env
     environment:
-      # Override localhost with service name for Docker networking
       - TYPEORM_HOST=void-postgres
       - TYPEORM_PORT=5432
-      # App will fallback to POSTGRES_* vars from .envilure
     depends_on:
       - void-postgres
     networks:
       - void-network
+      - dokploy-network
     restart: on-failure
-    deploy:
-      resources:
-        limits:
-          cpus: '0.40'
-          memory: 256M
-        reservations:
-          cpus: '0.10'
-          memory: 128M
+    labels:
+      - "traefik.enable=true"
+      # 1. Define the Router: Capture traffic for your domain AND the /api path
+      - "traefik.http.routers.void-backend.rule=Host(`arcane-stats.jesusjimenez.dev`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.void-backend.entrypoints=websecure"
+      - "traefik.http.routers.void-backend.tls.certresolver=letsencrypt"
+      
+      # 2. Define the Middleware: Strip "/api" so the backend code just sees "/users" instead of "/api/users"
+      - "traefik.http.middlewares.void-strip.stripprefix.prefixes=/api"
+      - "traefik.http.routers.void-backend.middlewares=void-strip"
+      
+      # 3. Define the Service Port (Internal Container Port)
+      - "traefik.http.services.void-backend.loadbalancer.server.port=4000"
 
   void-frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost:4000}
+        # VITAL: Now the API URL is the same domain, but with the /api suffix
+        VITE_API_URL: https://arcane-stats.jesusjimenez.dev/api
     container_name: void-frontend
-    ports:
-      - "3010:80"
     environment:
-      - VITE_API_URL=${VITE_API_URL:-http://localhost:4000}
+      - VITE_API_URL=https://arcane-stats.jesusjimenez.dev/api
     depends_on:
       - void-backend
     networks:
       - void-network
+      - dokploy-network
     restart: on-failure
-    deploy:
-      resources:
-        limits:
-          cpus: '0.40'
-          memory: 96M
-        reservations:
-          cpus: '0.05'
-          memory: 48M
+    labels:
+      - "traefik.enable=true"
+      # 1. Define the Router: Capture EVERYTHING else on this domain
+      - "traefik.http.routers.void-frontend.rule=Host(`arcane-stats.jesusjimenez.dev`)"
+      - "traefik.http.routers.void-frontend.entrypoints=websecure"
+      - "traefik.http.routers.void-frontend.tls.certresolver=letsencrypt"
+      
+      # 2. Define the Service Port (Internal Nginx Port)
+      - "traefik.http.services.void-frontend.loadbalancer.server.port=80"
 
 networks:
   void-network:
     driver: bridge
+  dokploy-network:
+    external: true
 
 volumes:
   postgres_data:
