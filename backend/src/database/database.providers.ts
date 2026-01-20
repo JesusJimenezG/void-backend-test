@@ -11,9 +11,15 @@ export const databaseProviders = [
         type: 'postgres',
         host: configService.get<string>('TYPEORM_HOST'),
         port: parseInt(configService.get<string>('TYPEORM_PORT')),
-        username: configService.get<string>('TYPEORM_USERNAME'),
-        password: configService.get<string>('TYPEORM_PASSWORD'),
-        database: configService.get<string>('TYPEORM_DATABASE'),
+        username:
+          configService.get<string>('TYPEORM_USERNAME') ||
+          configService.get<string>('POSTGRES_USER'),
+        password:
+          configService.get<string>('TYPEORM_PASSWORD') ||
+          configService.get<string>('POSTGRES_PASSWORD'),
+        database:
+          configService.get<string>('TYPEORM_DATABASE') ||
+          configService.get<string>('POSTGRES_DB'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize:
           configService.get<string>('TYPEORM_SYNCHRONIZE') === 'true',

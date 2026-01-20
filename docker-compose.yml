@@ -35,6 +35,7 @@ services:
       # Override localhost with service name for Docker networking
       - TYPEORM_HOST=void-postgres
       - TYPEORM_PORT=5432
+      # App will fallback to POSTGRES_* vars from .envilure
     depends_on:
       - void-postgres
     networks:
